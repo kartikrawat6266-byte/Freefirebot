@@ -1842,14 +1842,21 @@ async def revoke_key(
     ])
 )
 
-                order["key"] = "REVOKED"
+                await context.bot.send_message(
+                    ...
+                )
 
-                order["revoked"] = True
+                # REMOVE ORDER FROM USER HISTORY
+
+                db[user_id][
+                    "orders"
+                ].remove(
+                    order
+                )
 
                 found = True
 
                 break
-
         save_data(db)
 
         if not found:
