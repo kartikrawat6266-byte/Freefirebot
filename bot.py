@@ -2919,16 +2919,16 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================
 
 async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# =========================================
+# OWNER ACTIVITY
+# =========================================
 
-    try:
+async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-        query = update.callback_query
-        await query.answer()
+    print("ACTIVITY BUTTON CLICKED")
 
-        # baaki tumhara poora code
-
-    except Exception as e:
-        print("ACTIVITY ERROR:", e)
+    query = update.callback_query
+    await query.answer()
 
     if not is_owner(query.from_user.id):
         return
@@ -2945,8 +2945,9 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     data = load_data()
 
-    text = ""
+    print("TOTAL USERS:", len(data))
 
+    text = ""
     if not data:
 
         text = (
