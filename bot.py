@@ -1160,29 +1160,38 @@ async def cancel_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # OWNER SUCCESS MESSAGE
     try:
 
-        await context.bot.send_message(
-            chat_id=query.message.chat.id,
-            text=(
-                "╔════════════════════╗\n"
-                " 🍫 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗖𝗔𝗡𝗖𝗘𝗟𝗟𝗘𝗗 🎭\n"
-                "╚════════════════════╝\n\n"
+        await query.message.edit_text(
 
-                "❌ <b>𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗖𝗔𝗡𝗖𝗘𝗟𝗟𝗘𝗗</b>\n\n"
+        text=(
 
-                "⚡ <b>𝗨𝘀𝗲𝗿 𝗣𝗮𝘆𝗺𝗲𝗻𝘁 𝗛𝗮𝘀</b>\n"
-                "<b>𝗕𝗲𝗲𝗻 𝗖𝗮𝗻𝗰𝗲𝗹𝗹𝗲𝗱.</b>"
-            ),
-            parse_mode="HTML",
-            reply_markup=InlineKeyboardMarkup([
+            "╔════════════════════╗\n"
+            " 🍫 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗖𝗔𝗡𝗖𝗘𝗟𝗟𝗘𝗗 🎭\n"
+            "╚════════════════════╝\n\n"
 
-                [
-                    InlineKeyboardButton(
-                        "🧚🏻 Go To Back Main Menu 🪩",
-                        callback_data="main_menu"
-                    )
-                ]
-            ])
-        )
+            "❌ <b>𝗣𝗮𝘆𝗺𝗲𝗻𝘁 𝗛𝗮𝘀</b>\n"
+            "<b>𝗕𝗲𝗲𝗻 𝗖𝗮𝗻𝗰𝗲𝗹𝗹𝗲𝗱.</b>"
+
+        ),
+
+        parse_mode="HTML",
+
+        reply_markup=InlineKeyboardMarkup([
+
+            [
+                InlineKeyboardButton(
+                    "🈲 Go To Back Pending",
+                    callback_data="owner_pending"
+                )
+            ],
+
+            [
+                InlineKeyboardButton(
+                    "🌈 Main Menu",
+                    callback_data="main_menu"
+                )
+            ]
+        ])
+    )
     except:
         pass
 
