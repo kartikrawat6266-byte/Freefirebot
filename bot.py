@@ -30,6 +30,9 @@ from telegram.ext import (
     filters
 )
 
+USERS_PER_PAGE = 20
+ACTIVITY_PER_PAGE = 20
+
 # =========================================
 # CONFIG
 # =========================================
@@ -2633,13 +2636,24 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.edit_text(
         text=text[:4000],
         parse_mode="HTML",
-reply_markup=InlineKeyboardMarkup([
+        reply_markup=InlineKeyboardMarkup([
 
             [
                 InlineKeyboardButton(
+                    "⬅️ Prev",
+                    callback_data="users_prev"
+                ),
+
+                InlineKeyboardButton(
                     "🈲 UpDaTe 📜",
                     callback_data="owner_users"
+                ),
+
+                InlineKeyboardButton(
+                    "➡️ Next",
+                    callback_data="users_next"
                 )
+
             ],
 
             [
@@ -2912,6 +2926,16 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(query.from_user.id):
         return
 
+    page = context.user_data.get("activity_page", 0)
+
+    if query.data == "activity_next":
+        page += 1
+
+    elif query.data == "activity_prev":
+        page = max(0, page - 1)
+
+    context.user_data["activity_page"] = page
+
     data = load_data()
 
     text = ""
@@ -2924,7 +2948,14 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     else:
 
-        for user_id, user_data in data.items():
+        activities = list(data.items())
+
+        start = page * ACTIVITY_PER_PAGE
+        end = start + ACTIVITY_PER_PAGE
+
+        activities = activities[start:end]
+
+        for user_id, user_data in activities:
 
             username = user_data.get("username")
 
@@ -2965,12 +2996,22 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             [
                 InlineKeyboardButton(
+                    "⬅️ Prev",
+                    callback_data="activity_prev"
+                ),
+
+                InlineKeyboardButton(
                     "🛡️ UpDaTe 📜",
                     callback_data="owner_activity"
+                ),
+
+                InlineKeyboardButton(
+                    "➡️ Next",
+                    callback_data="activity_next"
                 )
 
-            ],    
-            
+            ],
+
             [
                 InlineKeyboardButton(
                     "🧝🏻‍♀️ BacK",
@@ -2984,7 +3025,7 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ]
         ])
     )
-
+    
 # =========================================
 # BAN USER
 # =========================================
@@ -3417,8 +3458,8 @@ def main():
 
     app.add_handler(
         CallbackQueryHandler(
-            owner_pending,
-            pattern="^owner_pending$"
+            owner_users,
+            pattern="^(owner_users|users_next|users_prev)$"
         )
     )
 
@@ -3432,7 +3473,7 @@ def main():
     app.add_handler(
         CallbackQueryHandler(
             owner_activity,
-            pattern="^owner_activity$"
+            pattern="^(owner_activity|activity_next|activity_prev)$"
         )
     )
     
