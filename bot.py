@@ -2640,7 +2640,7 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             [
                 InlineKeyboardButton(
-                    "⬅️ Prev",
+                    "🕹️ Prev 🍂",
                     callback_data="users_prev"
                 ),
 
@@ -2650,7 +2650,7 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 ),
 
                 InlineKeyboardButton(
-                    "➡️ Next",
+                    "🕹️ Next 🍓",
                     callback_data="users_next"
                 )
 
@@ -2920,8 +2920,15 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    query = update.callback_query
-    await query.answer()
+    try:
+
+        query = update.callback_query
+        await query.answer()
+
+        # baaki tumhara poora code
+
+    except Exception as e:
+        print("ACTIVITY ERROR:", e)
 
     if not is_owner(query.from_user.id):
         return
