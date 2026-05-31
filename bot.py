@@ -3096,18 +3096,25 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(query.from_user.id):
         return
 
-    page = context.user_data.get("verified_page", 0)
+    page = context.user_data.get(
+        "verified_page",
+        0
+    )
 
-    if query.data == "owner_verified":
-        page = 0
+    if query.data == "verified_next":
 
-    elif query.data == "verified_next":
         page += 1
 
     elif query.data == "verified_prev":
-        page = max(0, page - 1)
 
-    context.user_data["verified_page"] = page
+        page = max(
+            0,
+            page - 1
+        )
+
+    context.user_data[
+        "verified_page"
+    ] = page
 
     data = load_data()
 
@@ -3148,9 +3155,15 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not orders_page:
 
-        context.user_data["verified_page"] = 0
+        context.user_data[
+            "verified_page"
+        ] = page - 1
 
-        await owner_verified(update, context)
+        await query.answer(
+            "❌ 𝗡𝗢 𝗠𝗢𝗥𝗘 𝗩𝗘𝗥𝗜𝗙𝗜𝗘𝗗 𝗣𝗔𝗬𝗠𝗘𝗡𝗧𝗦",
+            show_alert=True
+        )
+
         return
 
     uid, order = orders_page[0]
