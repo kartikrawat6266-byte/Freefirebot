@@ -2566,15 +2566,18 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         parse_mode="HTML"
     )
-    
+
 # =========================================
 # OWNER USERS
 # =========================================
 
 async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("OWNER USERS CLICKED")
 
     query = update.callback_query
     await query.answer()
+
+    await query.message.reply_text("Users handler working")
 
     if not is_owner(query.from_user.id):
         return
@@ -2667,7 +2670,7 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ]
         ])
     )
-    
+
 # =========================================
 # BOT LIVE STATUS
 # =========================================
@@ -3424,8 +3427,8 @@ def main():
         CallbackQueryHandler(
             owner_users,
             pattern="^(owner_users|users_next|users_prev)$"
+        )
     )
-)
 
     app.add_handler(
         CallbackQueryHandler(
