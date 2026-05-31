@@ -3070,13 +3070,6 @@ async def owner_pending(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             [
                 InlineKeyboardButton(
-                    "❌ CaNcEl AlL PeNdInG",
-                    callback_data="cancelpayment"
-                )
-            ],
-
-            [
-                InlineKeyboardButton(
                     "🧝🏻‍♀️ BacK",
                     callback_data="owner_panel"
                 ),
