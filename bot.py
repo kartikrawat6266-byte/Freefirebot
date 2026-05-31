@@ -30,8 +30,8 @@ from telegram.ext import (
     filters
 )
 
-USERS_PER_PAGE = 2
-ACTIVITY_PER_PAGE = 2
+USERS_PER_PAGE = 10
+ACTIVITY_PER_PAGE = 10
 
 # =========================================
 # CONFIG
@@ -2321,6 +2321,13 @@ def owner_panel_keyboard():
         [
            InlineKeyboardButton("🚫 Ban User", callback_data="ban_user"),
            InlineKeyboardButton("🕹️ Unban User", callback_data="unban_user")
+        ],
+
+        [
+            InlineKeyboardButton(
+                "🧚🏻 UpDaTe PaNeL",
+                callback_data="owner_panel"
+            )
         ],
 
         [
