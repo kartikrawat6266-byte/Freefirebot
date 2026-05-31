@@ -3424,8 +3424,8 @@ def main():
         CallbackQueryHandler(
             owner_users,
             pattern="^(owner_users|users_next|users_prev)$"
-        )
     )
+)
 
     app.add_handler(
         CallbackQueryHandler(
