@@ -2567,108 +2567,74 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="HTML"
     )
 
-# =========================================
-# OWNER USERS
-# =========================================
-
 async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    print("OWNER USERS CLICKED")
+    try:
 
-    query = update.callback_query
-    await query.answer()
+        print("OWNER USERS CLICKED")
 
-    if not is_owner(query.from_user.id):
-        return
+        query = update.callback_query
+        await query.answer()
 
-    page = context.user_data.get("users_page", 0)
+        if not is_owner(query.from_user.id):
+            return
 
-    if query.data == "users_next":
-        page += 1
+        page = context.user_data.get("users_page", 0)
 
-    elif query.data == "users_prev":
-        page = max(0, page - 1)
+        if query.data == "users_next":
+            page += 1
 
-    context.user_data["users_page"] = page
+        elif query.data == "users_prev":
+            page = max(0, page - 1)
 
-    data = load_data()
+        context.user_data["users_page"] = page
 
-    if not data:
+        data = load_data()
+
+        if not data:
+
+            await query.message.edit_text(
+                "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿𝘀 𝗙𝗼𝘂𝗻𝗱</b>",
+                parse_mode="HTML"
+            )
+            return
+
+        unique_users = {}
+
+        for uid, user_data in data.items():
+            unique_users[str(uid)] = user_data
+
+        users = list(unique_users.items())
+
+        start = page * USERS_PER_PAGE
+        end = start + USERS_PER_PAGE
+
+        page_users = users[start:end]
+
+        text = ""
+
+        for uid, user_data in page_users:
+            # tumhara existing code yahin rahega
+            pass
 
         await query.message.edit_text(
-            "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿𝘀 𝗙𝗼𝘂𝗻𝗱</b>",
-            parse_mode="HTML"
-        )
-        return
-
-    unique_users = {}
-
-    for uid, user_data in data.items():
-        unique_users[str(uid)] = user_data
-
-    users = list(unique_users.items())
-
-    start = page * USERS_PER_PAGE
-    end = start + USERS_PER_PAGE
-
-    page_users = users[start:end]
-
-    text = ""
-
-    for uid, user_data in page_users:
-
-        username = user_data.get("username")
-
-        if username:
-            username = f"@{username}"
-        else:
-            username = "Not Set"
-
-        first_name = user_data.get("name")
-
-        if not first_name:
-            first_name = "Not Available"
-
-        text += (
-            "<b>🆄🆂🅴🆁🆂 🅷🅸🆂🆃🅾🆁🆈</b>\n\n"
-            f"🥇 <b>𝗨𝗦𝗘𝗥𝗡𝗔𝗠𝗘 :</b> <b>{username}</b>\n\n"
-            f"🙆🏻‍♂️ <b>𝗨𝗦𝗘𝗥 𝗜𝗗 :</b>\n<code>{uid}</code>\n\n"
-            f"👤 <b>𝗡𝗔𝗠𝗘 :</b> <b>{first_name}</b>\n\n"
-            f"📅 <b>𝗝𝗢𝗜𝗡𝗘𝗗 :</b>\n"
-            f"<b>{user_data.get('joined', 'Unknown')}</b>\n\n"
-            "━━━━━━━━━━━━━━━━━━\n\n"
+            text=text,
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("⬅️ Prev", callback_data="users_prev"),
+                    InlineKeyboardButton("🔄 Refresh", callback_data="owner_users"),
+                    InlineKeyboardButton("➡️ Next", callback_data="users_next")
+                ],
+                [
+                    InlineKeyboardButton("🧝🏻‍♀️ BacK", callback_data="owner_panel"),
+                    InlineKeyboardButton("🌈 MaiN MenU", callback_data="main_menu")
+                ]
+            ])
         )
 
-    await query.message.edit_text(
-        text=text,
-        parse_mode="HTML",
-        reply_markup=InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton(
-                    "⬅️ Prev",
-                    callback_data="users_prev"
-                ),
-                InlineKeyboardButton(
-                    "🔄 Refresh",
-                    callback_data="owner_users"
-                ),
-                InlineKeyboardButton(
-                    "➡️ Next",
-                    callback_data="users_next"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "🧝🏻‍♀️ BacK",
-                    callback_data="owner_panel"
-                ),
-                InlineKeyboardButton(
-                    "🌈 MaiN MenU",
-                    callback_data="main_menu"
-                )
-            ]
-        ])
-    )
+    except Exception as e:
+        print("OWNER_USERS ERROR:", e)
 
 # =========================================
 # BOT LIVE STATUS
