@@ -2972,38 +2972,30 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     await query.message.edit_text(
-        text=text[:4000],
-        parse_mode="HTML",
-        reply_markup=InlineKeyboardMarkup([
+    text=text[:4000],
+    parse_mode="HTML",
+    reply_markup=InlineKeyboardMarkup([
 
-            [
-                InlineKeyboardButton(
-                    "❌ ReVoKe LaSt KeY",
-                    callback_data=f"revoke|{uid}|{order.get('order_id')}"
-                )
-            ],
+        [
+            InlineKeyboardButton(
+                "🈲 UpDaTe 🍫",
+                callback_data="owner_verified"
+            )
+        ],
 
-            [
-                InlineKeyboardButton(
-                    "🈲 UpDaTe 🍫",
-                    callback_data="owner_verified"
-                )
-            ],
+        [
+            InlineKeyboardButton(
+                "🧝🏻‍♀️ BacK",
+                callback_data="owner_panel"
+            ),
 
-            [
-                InlineKeyboardButton(
-                    "🧝🏻‍♀️ BacK",
-                    callback_data="owner_panel"
-                ),
-
-                InlineKeyboardButton(
-                    "🌈 MaiN MenU",
-                    callback_data="main_menu"
-                )
-            ]
-
-        ])
-    )
+            InlineKeyboardButton(
+                "🌈 MaiN MenU",
+                callback_data="main_menu"
+            )
+        ]
+    ])
+)
 
 # =========================================
 # OWNER ACTIVITY
