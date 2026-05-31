@@ -31,7 +31,7 @@ from telegram.ext import (
 )
 
 USERS_PER_PAGE = 20
-ACTIVITY_PER_PAGE = 20
+ACTIVITY_PER_PAGE = 2
 
 # =========================================
 # CONFIG
