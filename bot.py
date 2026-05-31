@@ -3517,6 +3517,13 @@ def main():
 
     app.add_handler(
         CallbackQueryHandler(
+            owner_pending,
+            pattern="^owner_pending$"
+        )
+    )
+
+    app.add_handler(
+        CallbackQueryHandler(
             owner_activity,
             pattern="^(owner_activity|activity_next|activity_prev)$"
         )
