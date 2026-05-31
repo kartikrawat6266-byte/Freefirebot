@@ -2619,8 +2619,15 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
         for uid, user_data in data.items():
 
             unique_users[str(uid)] = user_data
+            
+        users = list(unique_users.items())
 
-        for uid, user_data in unique_users.items():
+        start = page * USERS_PER_PAGE
+        end = start + USERS_PER_PAGE
+
+        users = users[start:end]
+        
+        for uid, user_data in users:
 
             username = user_data.get("username")
 
