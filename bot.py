@@ -3250,7 +3250,10 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("ACTIVITY BUTTON CLICKED")
 
     query = update.callback_query
-    await query.answer()
+    if query.data not in [
+        "verified_next"
+    ]:
+        await query.answer()
 
     if not is_owner(query.from_user.id):
         return
