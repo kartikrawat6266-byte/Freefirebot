@@ -2974,9 +2974,6 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.edit_text(
         text=text[:4000],
         parse_mode="HTML",
-await query.message.edit_text(
-        text=text[:4000],
-        parse_mode="HTML",
         reply_markup=InlineKeyboardMarkup([
 
             [
