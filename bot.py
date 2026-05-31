@@ -1732,38 +1732,78 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(query.from_user.id):
         return
 
-    data = query.data.split("|")
+    try:
 
-    user_id = data[1]
-    order_id = data[2]
+        data = query.data.split("|")
 
-    db = load_data()
+        user_id = str(data[1])
+        order_id = data[2]
 
-    if user_id not in db:
+        db = load_data()
 
-        return
+        if user_id not in db:
 
-    for order in db[user_id].get("orders", []):
+            await query.message.edit_text(
+                "❌ User Not Found"
+            )
+            return
 
-        if order.get("order_id") == order_id:
+        found = False
 
-            order["key"] = "REVOKED"
+        for order in db[user_id].get("orders", []):
 
-            break
+            if order.get("order_id") == order_id:
 
-    save_data(db)
+                order["key"] = "REVOKED"
+                order["revoked"] = True
 
-    await query.message.edit_text(
-        text=(
-            "╔════════════════════╗\n"
-            "   ❌ 𝗞𝗘𝗬 𝗥𝗘𝗩𝗢𝗞𝗘𝗗 ❌\n"
-            "╚════════════════════╝\n\n"
+                found = True
+                break
 
-            "🧝🏻‍♀️ <b>𝗧𝗵𝗲 𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻</b>\n"
-            "<b>𝗥𝗲𝘃𝗼𝗸𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆.</b>"
-        ),
-        parse_mode="HTML"
-    )
+        save_data(db)
+
+        if not found:
+
+            await query.message.edit_text(
+                "❌ Order Not Found"
+            )
+            return
+
+        await query.message.edit_text(
+            text=(
+                "╔════════════════════╗\n"
+                "   ❌ 𝗞𝗘𝗬 𝗥𝗘𝗩𝗢𝗞𝗘𝗗 ❌\n"
+                "╚════════════════════╝\n\n"
+
+                "🧝🏻‍♀️ <b>𝗧𝗵𝗲 𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻</b>\n"
+                "<b>𝗥𝗲𝘃𝗼𝗸𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆.</b>"
+            ),
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup([
+
+                [
+                    InlineKeyboardButton(
+                        "🈲 BaCk To VeRiFiEd",
+                        callback_data="owner_verified"
+                    )
+                ],
+
+                [
+                    InlineKeyboardButton(
+                        "🌈 MaIn MeNu",
+                        callback_data="main_menu"
+                    )
+                ]
+            ])
+        )
+
+    except Exception as e:
+
+        print("REVOKE ERROR :", e)
+
+        await query.message.edit_text(
+            f"❌ Error\n\n{e}"
+        )
         
 # =========================================
 # MY ORDERS
