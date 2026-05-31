@@ -32,6 +32,7 @@ from telegram.ext import (
 
 USERS_PER_PAGE = 10
 ACTIVITY_PER_PAGE = 10
+VERIFIED_PER_PAGE = 1
 
 # =========================================
 # CONFIG
@@ -2963,6 +2964,8 @@ async def owner_pending(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # OWNER VERIFIED
 # =========================================
 
+VERIFIED_PER_PAGE = 1
+
 async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     query = update.callback_query
@@ -2971,79 +2974,138 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(query.from_user.id):
         return
 
+    page = context.user_data.get("verified_page", 0)
+
+    if query.data == "owner_verified":
+        page = 0
+
+    elif query.data == "verified_next":
+        page += 1
+
+    elif query.data == "verified_prev":
+        page = max(0, page - 1)
+
+    context.user_data["verified_page"] = page
+
     data = load_data()
 
-    text = ""
-
-    found = False
+    all_orders = []
 
     for uid, user in data.items():
 
         for order in user.get("orders", []):
 
-            found = True
+            all_orders.append((uid, order))
 
-            text += (
+    if not all_orders:
 
-                "<b>🆅🅴🆁🅸🅵🅸🅴🅳 🅿🅰🆈🅼🅴🅽🆃🆂</b>\n\n"
+        await query.message.edit_text(
+            text="❌ <b>𝗡𝗼 𝗩𝗲𝗿𝗶𝗳𝗶𝗲𝗱 𝗣𝗮𝘆𝗺𝗲𝗻𝘁𝘀 𝗙𝗼𝘂𝗻𝗱</b>",
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup([
 
-                f"🥇 <b>𝗨𝗦𝗘𝗥𝗡𝗔𝗠𝗘 :</b> "
-                f"<b>@{order.get('username', 'No Username')}</b>\n\n"
+                [
+                    InlineKeyboardButton(
+                        "🧝🏻‍♀️ BacK",
+                        callback_data="owner_panel"
+                    ),
 
-                f"🙆🏻‍♂️ <b>𝗨𝗦𝗘𝗥 𝗜𝗗 :</b> "
-                f"<b><code>{uid}</code></b>\n\n"
-
-                f"🎮 <b>𝗚𝗔𝗠𝗘 :</b> "
-                f"<b>{order.get('game')}</b>\n\n"
-
-                f"💰 <b>𝗔𝗠𝗢𝗨𝗡𝗧 :</b> "
-                f"<b>₹{order.get('amount')}</b>\n\n"
-
-                f"🔑 <b>𝗞𝗘𝗬 :</b>\n"
-                f"<code>{order.get('key')}</code>\n\n"
-
-                "━━━━━━━━━━━━━━━━━━\n\n"
-            )
-
-    if not found:
-
-        text = (
-            "❌ <b>𝗡𝗼 𝗩𝗲𝗿𝗶𝗳𝗶𝗲𝗱 𝗣𝗮𝘆𝗺𝗲𝗻𝘁𝘀 𝗙𝗼𝘂𝗻𝗱</b>"
+                    InlineKeyboardButton(
+                        "🌈 MaiN MenU",
+                        callback_data="main_menu"
+                    )
+                ]
+            ])
         )
+        return
+
+    start = page * VERIFIED_PER_PAGE
+    end = start + VERIFIED_PER_PAGE
+
+    orders_page = all_orders[start:end]
+
+    if not orders_page:
+
+        context.user_data["verified_page"] = 0
+
+        await owner_verified(update, context)
+        return
+
+    uid, order = orders_page[0]
+
+    key_text = order.get("key", "No Key")
+
+    if order.get("revoked"):
+        key_text = "❌ REVOKED"
+
+    text = (
+
+        "<b>🆅🅴🆁🅸🅵🅸🅴🅳 🅿🅰🆈🅼🅴🅽🆃🆂</b>\n\n"
+
+        f"🥇 <b>𝗨𝗦𝗘𝗥𝗡𝗔𝗠𝗘 :</b> "
+        f"<b>@{order.get('username', 'No Username')}</b>\n\n"
+
+        f"🙆🏻‍♂️ <b>𝗨𝗦𝗘𝗥 𝗜𝗗 :</b> "
+        f"<b><code>{uid}</code></b>\n\n"
+
+        f"🎮 <b>𝗚𝗔𝗠𝗘 :</b> "
+        f"<b>{order.get('game')}</b>\n\n"
+
+        f"💰 <b>𝗔𝗠𝗢𝗨𝗡𝗧 :</b> "
+        f"<b>₹{order.get('amount')}</b>\n\n"
+
+        f"🔑 <b>𝗞𝗘𝗬 :</b>\n"
+        f"<code>{key_text}</code>\n\n"
+
+        f"📄 <b>𝗣𝗔𝗚𝗘 :</b> "
+        f"<b>{page + 1}/{len(all_orders)}</b>\n\n"
+
+        "━━━━━━━━━━━━━━━━━━\n\n"
+    )
 
     await query.message.edit_text(
-    text=text[:4000],
-    parse_mode="HTML",
-    reply_markup=InlineKeyboardMarkup([
+        text=text,
+        parse_mode="HTML",
+        reply_markup=InlineKeyboardMarkup([
 
-        [
-            InlineKeyboardButton(
-                "❌ ReVoKe LaSt KeY",
-                callback_data=f"revoke|{uid}|{order.get('order_id')}"
-            )
-        ],
-        
-        [
-            InlineKeyboardButton(
-                "🈲 UpDaTe 🍫",
-                callback_data="owner_verified"
-            )
-        ],
+            [
+                InlineKeyboardButton(
+                    "🥶 Prev",
+                    callback_data="verified_prev"
+                ),
 
-        [
-            InlineKeyboardButton(
-                "🧝🏻‍♀️ BacK",
-                callback_data="owner_panel"
-            ),
+                InlineKeyboardButton(
+                    "🈲 UpDaTe 🍫",
+                    callback_data="owner_verified"
+                ),
 
-            InlineKeyboardButton(
-                "🌈 MaiN MenU",
-                callback_data="main_menu"
-            )
-        ]
-    ])
-)
+                InlineKeyboardButton(
+                    "❄️ Next",
+                    callback_data="verified_next"
+                )
+            ],
 
+            [
+                InlineKeyboardButton(
+                    "❌ ReVoKe KeY 🔑",
+                    callback_data=f"revoke|{uid}|{order.get('order_id')}"
+                )
+            ],
+
+            [
+                InlineKeyboardButton(
+                    "🧝🏻‍♀️ BacK",
+                    callback_data="owner_panel"
+                ),
+
+                InlineKeyboardButton(
+                    "🌈 MaiN MenU",
+                    callback_data="main_menu"
+                )
+            ]
+        ])
+    )
+    
 # =========================================
 # OWNER ACTIVITY
 # =========================================
@@ -3615,7 +3677,7 @@ def main():
     app.add_handler(
         CallbackQueryHandler(
             owner_verified,
-            pattern="^owner_verified$"
+            pattern="^(owner_verified|verified_next|verified_prev)$"
         )
     )
 
