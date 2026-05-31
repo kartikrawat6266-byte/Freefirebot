@@ -1725,12 +1725,18 @@ async def delivery_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # REVOKE KEY
 # =========================================
 
-async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def revoke_key(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
 
     query = update.callback_query
+
     await query.answer()
 
-    if not is_owner(query.from_user.id):
+    if not is_owner(
+        query.from_user.id
+    ):
         return
 
     try:
@@ -1751,11 +1757,17 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         found = False
 
-        for order in db[user_id].get("orders", []):
+        for order in db[user_id].get(
+            "orders",
+            []
+        ):
 
-            if order.get("order_id") == order_id:
+            if order.get(
+                "order_id"
+            ) == order_id:
 
                 # DELETE USER KEY MESSAGE
+
                 try:
 
                     msg_id = order.get(
@@ -1764,9 +1776,15 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                     if msg_id:
 
-                        await context.bot.delete_message(
-                            chat_id=int(user_id),
-                            message_id=msg_id
+                        asyncio.create_task(
+
+                            context.bot.delete_message(
+                                chat_id=int(
+                                    user_id
+                                ),
+                                message_id=msg_id
+                            )
+
                         )
 
                 except Exception as e:
@@ -1777,9 +1795,11 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     )
 
                 order["key"] = "REVOKED"
+
                 order["revoked"] = True
 
                 found = True
+
                 break
 
         save_data(db)
@@ -1792,40 +1812,70 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
 
         await query.message.edit_text(
+
             text=(
+
                 "╔════════════════════╗\n"
                 "   ❌ 𝗞𝗘𝗬 𝗥𝗘𝗩𝗢𝗞𝗘𝗗 ❌\n"
                 "╚════════════════════╝\n\n"
 
-                "🧝🏻‍♀️ <b>𝗧𝗵𝗲 𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻</b>\n"
-                "<b>𝗥𝗲𝘃𝗼𝗸𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆.</b>"
+                "🧝🏻‍♀️ <b>𝗧𝗵𝗲 𝗞𝗲𝘆 𝗛𝗮𝘀 "
+                "𝗕𝗲𝗲𝗻</b>\n"
+
+                "<b>𝗥𝗲𝘃𝗼𝗸𝗲𝗱 "
+                "𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆.</b>"
+
             ),
+
             parse_mode="HTML",
+
             reply_markup=InlineKeyboardMarkup([
 
                 [
+
                     InlineKeyboardButton(
+
                         "🈲 BaCk To VeRiFiEd",
-                        callback_data="owner_verified"
+
+                        callback_data=
+                        "owner_verified"
+
                     )
+
                 ],
 
                 [
+
                     InlineKeyboardButton(
+
                         "🌈 MaIn MeNu",
-                        callback_data="main_menu"
+
+                        callback_data=
+                        "main_menu"
+
                     )
+
                 ]
+
             ])
+
         )
 
     except Exception as e:
 
-        print("REVOKE ERROR :", e)
-
-        await query.message.edit_text(
-            f"❌ Error\n\n{e}"
+        print(
+            "REVOKE ERROR :",
+            e
         )
+
+        try:
+
+            await query.message.edit_text(
+                f"❌ Error\n\n{e}"
+            )
+
+        except:
+            pass
         
 # =========================================
 # MY ORDERS
