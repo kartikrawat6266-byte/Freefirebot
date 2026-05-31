@@ -3071,7 +3071,7 @@ async def owner_pending(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [
                 InlineKeyboardButton(
                     "❌ CaNcEl AlL PeNdInG",
-                    callback_data="cancel_all_pending"
+                    callback_data="cancelpayment"
                 )
             ],
 
@@ -3087,45 +3087,6 @@ async def owner_pending(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
             ]
         ])
-    )
-
-# =========================================
-# CANCEL ALL PENDING
-# =========================================
-
-async def cancel_all_pending(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE
-):
-
-    query = update.callback_query
-
-    await query.answer()
-
-    if not is_owner(
-        query.from_user.id
-    ):
-        return
-
-    context.bot_data[
-        "verify_orders"
-    ] = {}
-
-    await query.message.edit_text(
-
-        text=(
-
-            "╔════════════════════╗\n"
-            " ❌ 𝗔𝗟𝗟 𝗣𝗘𝗡𝗗𝗜𝗡𝗚 𝗖𝗔𝗡𝗖𝗘𝗟𝗘𝗗\n"
-            "╚════════════════════╝\n\n"
-
-            "🧝🏻‍♀️ <b>𝗔𝗹𝗹 𝗣𝗲𝗻𝗱𝗶𝗻𝗴</b>\n"
-            "<b>𝗣𝗮𝘆𝗺𝗲𝗻𝘁𝘀 𝗛𝗮𝘃𝗲</b>\n"
-            "<b>𝗕𝗲𝗲𝗻 𝗖𝗮𝗻𝗰𝗲𝗹𝗲𝗱.</b>"
-
-        ),
-
-        parse_mode="HTML"
     )
     
 # =========================================
@@ -3864,13 +3825,7 @@ def main():
             pattern="^(owner_verified|verified_next|verified_prev)$"
         )
     )
-
-    app.add_handler(
-        CallbackQueryHandler(
-            cancel_all_pending,
-            pattern="^cancel_all_pending$"
-        )
-    )
+    
     app.add_handler(
         CallbackQueryHandler(
             owner_pending,
