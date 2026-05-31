@@ -1656,7 +1656,7 @@ async def delivery_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         # ONLY ONE MESSAGE
-        await context.bot.send_message(
+        msg = await context.bot.send_message(
             chat_id=user_id,
             text=text,
             parse_mode="Markdown",
@@ -1677,6 +1677,11 @@ async def delivery_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if order.get("order_id") == order_id:
 
                 order["key"] = final_key
+
+                order["delivery_message_id"] = (
+                    msg.message_id
+                )
+
                 break
 
         # REMOVE DELIVERY DATA
@@ -1714,7 +1719,52 @@ async def delivery_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.message.edit_text(
             f"❌ Delivery Failed\n\n{e}"
         )
-    
+
+# =========================================
+# REVOKE KEY
+# =========================================
+
+async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    await query.answer()
+
+    if not is_owner(query.from_user.id):
+        return
+
+    data = query.data.split("|")
+
+    user_id = data[1]
+    order_id = data[2]
+
+    db = load_data()
+
+    if user_id not in db:
+
+        return
+
+    for order in db[user_id].get("orders", []):
+
+        if order.get("order_id") == order_id:
+
+            order["key"] = "REVOKED"
+
+            break
+
+    save_data(db)
+
+    await query.message.edit_text(
+        text=(
+            "╔════════════════════╗\n"
+            "   ❌ 𝗞𝗘𝗬 𝗥𝗘𝗩𝗢𝗞𝗘𝗗 ❌\n"
+            "╚════════════════════╝\n\n"
+
+            "🧝🏻‍♀️ <b>𝗧𝗵𝗲 𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻</b>\n"
+            "<b>𝗥𝗲𝘃𝗼𝗸𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆.</b>"
+        ),
+        parse_mode="HTML"
+    )
+        
 # =========================================
 # MY ORDERS
 # =========================================
@@ -2924,7 +2974,17 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.edit_text(
         text=text[:4000],
         parse_mode="HTML",
+await query.message.edit_text(
+        text=text[:4000],
+        parse_mode="HTML",
         reply_markup=InlineKeyboardMarkup([
+
+            [
+                InlineKeyboardButton(
+                    "❌ ReVoKe LaSt KeY",
+                    callback_data=f"revoke|{uid}|{order.get('order_id')}"
+                )
+            ],
 
             [
                 InlineKeyboardButton(
@@ -2944,6 +3004,7 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     callback_data="main_menu"
                 )
             ]
+
         ])
     )
 
@@ -3505,6 +3566,13 @@ def main():
         CallbackQueryHandler(
             owner_users,
             pattern="^(owner_users|users_next|users_prev)$"
+        )
+    )
+
+    app.add_handler(
+        CallbackQueryHandler(
+            revoke_key,
+            pattern=r"^revoke\|"
         )
     )
 
