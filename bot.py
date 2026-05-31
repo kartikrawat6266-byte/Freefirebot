@@ -1794,6 +1794,54 @@ async def revoke_key(
                         e
                     )
 
+                await context.bot.send_message(
+    chat_id=int(user_id),
+    text=(
+
+        "╔════════════════════╗\n"
+        " 🚫 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗡𝗢𝗧 𝗩𝗘𝗥𝗜𝗙𝗜𝗘𝗗 🚫\n"
+        "╚════════════════════╝\n\n"
+
+        "⚠️ <b>𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻 𝗥𝗲𝗺𝗼𝘃𝗲𝗱</b>\n\n"
+
+        "🧾 <b>𝗢𝘂𝗿 𝗦𝘆𝘀𝘁𝗲𝗺 𝗖𝗼𝘂𝗹𝗱 𝗡𝗼𝘁</b>\n"
+        "<b>𝗖𝗼𝗻𝗳𝗶𝗿𝗺 𝗬𝗼𝘂𝗿 𝗣𝗮𝘆𝗺𝗲𝗻𝘁.</b>\n\n"
+
+        "🍓 <b>𝗜𝗳 𝗬𝗼𝘂 𝗛𝗮𝘃𝗲</b>\n"
+        "<b>𝗥𝗲𝗮𝗹𝗹𝘆 𝗠𝗮𝗱𝗲 𝗧𝗵𝗲</b>\n"
+        "<b>𝗣𝗮𝘆𝗺𝗲𝗻𝘁, 𝗣𝗹𝗲𝗮𝘀𝗲</b>\n"
+        "<b>𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗧𝗵𝗲 𝗢𝘄𝗻𝗲𝗿.</b>\n\n"
+
+        "❌ <b>𝗜𝗳 𝗡𝗼 𝗣𝗮𝘆𝗺𝗲𝗻𝘁</b>\n"
+        "<b>𝗪𝗮𝘀 𝗠𝗮𝗱𝗲, 𝗣𝗹𝗲𝗮𝘀𝗲</b>\n"
+        "<b>𝗣𝘂𝗿𝗰𝗵𝗮𝘀𝗲 𝗔𝗴𝗮𝗶𝗻.</b>\n\n"
+
+        "🚫 <b>𝗥𝗲𝗽𝗲𝗮𝘁𝗲𝗱𝗹𝘆 𝗖𝗹𝗶𝗰𝗸𝗶𝗻𝗴</b>\n"
+        "<b>𝗩𝗲𝗿𝗶𝗳𝘆 𝗣𝗮𝘆𝗺𝗲𝗻𝘁</b>\n"
+        "<b>𝗪𝗶𝘁𝗵𝗼𝘂𝘁 𝗣𝗮𝘆𝗺𝗲𝗻𝘁</b>\n"
+        "<b>𝗠𝗮𝘆 𝗥𝗲𝘀𝘂𝗹𝘁 𝗜𝗻</b>\n"
+        "<b>𝗔 𝗣𝗲𝗿𝗺𝗮𝗻𝗲𝗻𝘁 𝗕𝗮𝗻.</b>"
+
+    ),
+    parse_mode="HTML",
+    reply_markup=InlineKeyboardMarkup([
+
+        [
+            InlineKeyboardButton(
+                "🧝🏻‍♀️ CoNtAcT OwNeR 🧛🏻‍♂️",
+                url="http://BESTCHEAT_OWNER.t.me"
+            )
+        ],
+
+        [
+            InlineKeyboardButton(
+                "🏚️ Go To Main Menu 🧚🏻",
+                callback_data="main_menu"
+            )
+        ]
+    ])
+)
+
                 order["key"] = "REVOKED"
 
                 order["revoked"] = True
