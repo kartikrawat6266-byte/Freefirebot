@@ -2919,11 +2919,6 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================
 
 async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
-# =========================================
-# OWNER ACTIVITY
-# =========================================
-
-async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print("ACTIVITY BUTTON CLICKED")
 
@@ -2948,14 +2943,11 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("TOTAL USERS:", len(data))
 
     text = ""
-    if not data:
 
-        text = (
-            "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿 𝗔𝗰𝘁𝗶𝘃𝗶𝘁𝘆 𝗙𝗼𝘂𝗻𝗱</b>"
-        )
+    if not data:
+        text = "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿 𝗔𝗰𝘁𝗶𝘃𝗶𝘁𝘆 𝗙𝗼𝘂𝗻𝗱</b>"
 
     else:
-
         activities = list(data.items())
 
         start = page * ACTIVITY_PER_PAGE
@@ -3004,7 +2996,7 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             [
                 InlineKeyboardButton(
-                    "⬅️ Prev",
+                    "🍓 Prev 🈲",
                     callback_data="activity_prev"
                 ),
 
@@ -3014,7 +3006,7 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 ),
 
                 InlineKeyboardButton(
-                    "➡️ Next",
+                    "🧙🏻‍♂️ Next 🧚🏻",
                     callback_data="activity_next"
                 )
 
