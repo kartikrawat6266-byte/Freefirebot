@@ -2989,42 +2989,50 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "━━━━━━━━━━━━━━━━━━\n\n"
             )
 
-    await query.message.edit_text(
-        text=text[:4000],
-        parse_mode="HTML",
-        reply_markup=InlineKeyboardMarkup([
+try:
 
-            [
-                InlineKeyboardButton(
-                    "🍓 Prev 🈲",
-                    callback_data="activity_prev"
-                ),
+        print("TEXT LENGTH:", len(text))
 
-                InlineKeyboardButton(
-                    "🛡️ UpDaTe 📜",
-                    callback_data="owner_activity"
-                ),
+        await query.message.edit_text(
+            text=text[:4000],
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup([
 
-                InlineKeyboardButton(
-                    "🧙🏻‍♂️ Next 🧚🏻",
-                    callback_data="activity_next"
-                )
+                [
+                    InlineKeyboardButton(
+                        "🍓 Prev 🈲",
+                        callback_data="activity_prev"
+                    ),
 
-            ],
+                    InlineKeyboardButton(
+                        "🛡️ UpDaTe 📜",
+                        callback_data="owner_activity"
+                    ),
 
-            [
-                InlineKeyboardButton(
-                    "🧝🏻‍♀️ BacK",
-                    callback_data="owner_panel"
-                ),
+                    InlineKeyboardButton(
+                        "🧙🏻‍♂️ Next 🧚🏻",
+                        callback_data="activity_next"
+                    )
 
-                InlineKeyboardButton(
-                    "🌈 MaiN MenU",
-                    callback_data="main_menu"
-                )
-            ]
-        ])
-    )
+                ],
+
+                [
+                    InlineKeyboardButton(
+                        "🧝🏻‍♀️ BacK",
+                        callback_data="owner_panel"
+                    ),
+
+                    InlineKeyboardButton(
+                        "🌈 MaiN MenU",
+                        callback_data="main_menu"
+                    )
+                ]
+            ])
+        )
+
+    except Exception as e:
+
+        print("ACTIVITY ERROR:", str(e))
     
 # =========================================
 # BAN USER
