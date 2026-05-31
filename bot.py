@@ -2930,7 +2930,10 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     page = context.user_data.get("activity_page", 0)
 
-    if query.data == "activity_next":
+    if query.data == "owner_activity":
+        page = 0
+
+    elif query.data == "activity_next":
         page += 1
 
     elif query.data == "activity_prev":
@@ -2992,6 +2995,12 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     print("TEXT LENGTH:", len(text))
 
+    if not text:
+
+        text = (
+            "❌ <b>𝗡𝗼 𝗔𝗰𝘁𝗶𝘃𝗶𝘁𝘆 𝗙𝗼𝘂𝗻𝗱</b>"
+        )
+        
     await query.message.edit_text(
         text=text[:4000],
         parse_mode="HTML",
