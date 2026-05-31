@@ -30,7 +30,7 @@ from telegram.ext import (
     filters
 )
 
-USERS_PER_PAGE = 20
+USERS_PER_PAGE = 2
 ACTIVITY_PER_PAGE = 2
 
 # =========================================
@@ -2582,6 +2582,19 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(query.from_user.id):
         return
 
+    page = context.user_data.get("users_page", 0)
+
+    if query.data == "owner_users":
+        page = 0
+
+    elif query.data == "users_next":
+        page += 1
+
+    elif query.data == "users_prev":
+        page = max(0, page - 1)
+
+    context.user_data["users_page"] = page
+
     data = load_data()
 
     text = ""
@@ -2589,7 +2602,7 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not data:
 
         text = (
-            "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿𝘀 𝗙𝗼𝘂𝗻𝗱</b>"
+            "❌ <b>𝗡𝗼 𝗨𝘀𝗲𝗿 𝗝𝗼𝗶𝗻𝗲𝗱 𝗬𝗲𝘁</b>"
         )
 
     else:
@@ -2632,7 +2645,13 @@ async def owner_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 "━━━━━━━━━━━━━━━━━━\n\n"
             )
+            
+    if not text:
 
+        text = (
+            "🧝🏻‍♀️ <b>𝗡𝗼 𝗨𝘀𝗲𝗿𝘀 𝗛𝗮𝘃𝗲 𝗝𝗼𝗶𝗻𝗲𝗱 𝗧𝗵𝗲 𝗕𝗼𝘁 𝗬𝗲𝘁.</b>"
+        )
+        
     await query.message.edit_text(
         text=text[:4000],
         parse_mode="HTML",
@@ -2998,7 +3017,7 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not text:
 
         text = (
-            "❌ <b>𝗡𝗼 𝗔𝗰𝘁𝗶𝘃𝗶𝘁𝘆 𝗙𝗼𝘂𝗻𝗱</b>"
+            "🧙🏻‍♂️ <b>𝗡𝗼 𝗨𝘀𝗲𝗿 𝗔𝗰𝘁𝗶𝘃𝗶𝘁𝘆 𝗜𝘀 𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗔𝘁 𝗧𝗵𝗲 𝗠𝗼𝗺𝗲𝗻𝘁.</b>"
         )
         
     await query.message.edit_text(
