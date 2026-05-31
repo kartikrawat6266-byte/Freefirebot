@@ -1799,7 +1799,7 @@ async def revoke_key(
     text=(
 
         "╔════════════════════╗\n"
-        " 🚫 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗡𝗢𝗧 𝗩𝗘𝗥𝗜𝗙𝗜𝗘𝗗 🚫\n"
+        " 🚫 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 𝗡𝗢𝗧 𝗩𝗘𝗥𝗜𝗙𝗜𝗘𝗗\n"
         "╚════════════════════╝\n\n"
 
         "⚠️ <b>𝗞𝗲𝘆 𝗛𝗮𝘀 𝗕𝗲𝗲𝗻 𝗥𝗲𝗺𝗼𝘃𝗲𝗱</b>\n\n"
@@ -1841,10 +1841,6 @@ async def revoke_key(
         ]
     ])
 )
-
-                await context.bot.send_message(
-                    ...
-                )
 
                 # REMOVE ORDER FROM USER HISTORY
 
