@@ -2989,50 +2989,45 @@ async def owner_activity(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "━━━━━━━━━━━━━━━━━━\n\n"
             )
 
-try:
+    
+    print("TEXT LENGTH:", len(text))
 
-        print("TEXT LENGTH:", len(text))
+    await query.message.edit_text(
+        text=text[:4000],
+        parse_mode="HTML",
+        reply_markup=InlineKeyboardMarkup([
 
-        await query.message.edit_text(
-            text=text[:4000],
-            parse_mode="HTML",
-            reply_markup=InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton(
+                    "🍓 Prev 🈲",
+                    callback_data="activity_prev"
+                ),
 
-                [
-                    InlineKeyboardButton(
-                        "🍓 Prev 🈲",
-                        callback_data="activity_prev"
-                    ),
+                InlineKeyboardButton(
+                    "🛡️ UpDaTe 📜",
+                    callback_data="owner_activity"
+                ),
 
-                    InlineKeyboardButton(
-                        "🛡️ UpDaTe 📜",
-                        callback_data="owner_activity"
-                    ),
+                InlineKeyboardButton(
+                    "🧙🏻‍♂️ Next 🧚🏻",
+                    callback_data="activity_next"
+                )
 
-                    InlineKeyboardButton(
-                        "🧙🏻‍♂️ Next 🧚🏻",
-                        callback_data="activity_next"
-                    )
+            ],
 
-                ],
+            [
+                InlineKeyboardButton(
+                    "🧝🏻‍♀️ BacK",
+                    callback_data="owner_panel"
+                ),
 
-                [
-                    InlineKeyboardButton(
-                        "🧝🏻‍♀️ BacK",
-                        callback_data="owner_panel"
-                    ),
-
-                    InlineKeyboardButton(
-                        "🌈 MaiN MenU",
-                        callback_data="main_menu"
-                    )
-                ]
-            ])
-        )
-
-    except Exception as e:
-
-        print("ACTIVITY ERROR:", str(e))
+                InlineKeyboardButton(
+                    "🌈 MaiN MenU",
+                    callback_data="main_menu"
+                )
+            ]
+        ])
+    )
     
 # =========================================
 # BAN USER
