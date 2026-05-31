@@ -3018,6 +3018,13 @@ async def owner_verified(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         [
             InlineKeyboardButton(
+                "❌ ReVoKe LaSt KeY",
+                callback_data=f"revoke|{uid}|{order.get('order_id')}"
+            )
+        ],
+        
+        [
+            InlineKeyboardButton(
                 "🈲 UpDaTe 🍫",
                 callback_data="owner_verified"
             )
