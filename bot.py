@@ -1755,6 +1755,27 @@ async def revoke_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             if order.get("order_id") == order_id:
 
+                # DELETE USER KEY MESSAGE
+                try:
+
+                    msg_id = order.get(
+                        "delivery_message_id"
+                    )
+
+                    if msg_id:
+
+                        await context.bot.delete_message(
+                            chat_id=int(user_id),
+                            message_id=msg_id
+                        )
+
+                except Exception as e:
+
+                    print(
+                        "DELETE KEY MESSAGE ERROR :",
+                        e
+                    )
+
                 order["key"] = "REVOKED"
                 order["revoked"] = True
 
